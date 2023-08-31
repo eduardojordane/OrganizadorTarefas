@@ -1,11 +1,8 @@
 import React from 'react';
 import './Router.scss';
 import {useState} from 'react';
-
-import Editar from './components/Editar/Editar';
-import Deletar from './components/Deletar/Deletar';
-
-
+import Pencil from '../../images/pencil.svg'
+import Trash from '../../images/trash.svg'
 
 const Router = () => {
   const db = [
@@ -20,8 +17,6 @@ const Router = () => {
     { "id": 9, "title": "Estudar programação", "description": "Entrar na plataforma dos alunos para estudar", "completed": false },
     { "id": 10, "title": "shopping", "description": "Fazer algumas compras no shopping", "completed": true }
   ]
-//utilizar esse mockup como exemplo
-//inicialmente estava no App.jsx e fora da function App()
 
  return (
     <div className="Tasks">
@@ -30,24 +25,37 @@ const Router = () => {
         <thead>
           <tr>
             <th id="tarefa" className="tdtdwidth">Tarefa</th>
-            <th className="StatusOpcoes">Status</th>
-            <th className="StatusOpcoes">Opções</th>
+            <th className="StatusOpcoesAlign">Status</th>
+            <th className="StatusOpcoesAlign">Opções</th>
           </tr>
         </thead>
         <hr/>
         <tbody>
           {db.map(task => {
+            const [array, setArray] = useState(db);
+
+            const removeItem = (id) => {
+              console.log(array)
+              
+              /*const newData = [...array]
+              newData.splice((id-1), 1)
+              setArray(newData)*/
+              
+              const newData = array.filter((e) => e.id !== id)
+              setArray(newData)
+              console.log(newData)
+            }
+
             const [checked, setChecked] = useState(task.completed);
             
               function mudarEstado(){
                 setChecked (!checked);
               }
 
-
             return (
               <tr key={task.id}>
                 <td className="tooltip">{task.title}<span className="tooltiptext">{task.description}</span></td>
-                <td className="StatusOpcoes">
+                <td className="StatusOpcoesAlign">
                   <input
                     type="checkbox"
                     label="statusbox"
@@ -58,7 +66,11 @@ const Router = () => {
                     onChange={mudarEstado}
                   />
                 </td>
-                <td><Editar /><Deletar /></td>
+                <td className="StatusOpcoesAlign">
+                  <button><img src={Pencil} /></button>
+                  <button onClick={() => removeItem(task.id)}><img src={Trash} /></button>
+                 </td>
+
               </tr>
             );
           })}
