@@ -16,7 +16,25 @@ const Router = () => {
     { "id": 8, "title": "Jogar volei", "description": "Ir a quadra para jogar volei com os amigos", "completed": true },
     { "id": 9, "title": "Estudar programação", "description": "Entrar na plataforma dos alunos para estudar", "completed": false },
     { "id": 10, "title": "shopping", "description": "Fazer algumas compras no shopping", "completed": true }
-  ]
+  ];
+
+const [array, setArray] = useState(db);
+
+const removeItem = (id) => {
+  console.log(array)
+              
+  /*const newData = [...array]
+  newData.splice((id-1), 1)
+  setArray(newData)*/
+              
+  const newData = array.filter((e) => e.id !== id);
+  setArray(newData);
+  console.log(newData)
+
+  /*const rootElement = document.getElementById("root");
+  ReactDOM.render(<App />, rootElement);*/
+  
+};
 
  return (
     <div className="Tasks">
@@ -31,21 +49,8 @@ const Router = () => {
         </thead>
         <hr/>
         <tbody>
-          {db.map(task => {
-            const [array, setArray] = useState(db);
-
-            const removeItem = (id) => {
-              console.log(array)
-              
-              /*const newData = [...array]
-              newData.splice((id-1), 1)
-              setArray(newData)*/
-              
-              const newData = array.filter((e) => e.id !== id)
-              setArray(newData)
-              console.log(newData)
-            }
-
+          {array.map((task) => {
+            
             const [checked, setChecked] = useState(task.completed);
             
               function mudarEstado(){
@@ -68,7 +73,7 @@ const Router = () => {
                 </td>
                 <td className="StatusOpcoesAlign">
                   <button><img src={Pencil} /></button>
-                  <button onClick={() => removeItem(task.id)}><img src={Trash} /></button>
+                  <button onClick={() => removeItem(task.id)}><img src={Trash} alt="Remover"/></button>
                  </td>
 
               </tr>
@@ -79,5 +84,6 @@ const Router = () => {
     </div>
   )
 }
+
 
 export default Router
