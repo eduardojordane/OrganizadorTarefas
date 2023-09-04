@@ -94,3 +94,54 @@ button:active{
     background: rgba(255, 255, 255, 0.082);
     border-radius: 10px;
 }
+
+.Modal{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 450px;
+    height: 280px;
+    border-radius: 5px;
+
+    background-color: #fff;
+    font-family: Raleway;
+}
+
+.Modal p{
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 41px;
+    text-align: center;
+    color: black;
+    margin-top: 50px;
+}
+
+.Modal input[type="text"]{
+    width: 250px;
+    border: none;
+    margin-bottom: 45px;
+    text-align: center;
+    font-family: Raleway;
+}
+
+.Modal button{
+    font-family: Raleway;
+    font-size: 18px;
+    line-height: 45px;
+    margin-left: 10px;
+    width: 140px;
+
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.Modal button:hover{
+    background-color: #0C70F2;
+    color: white;
+    border: 1px;
+}

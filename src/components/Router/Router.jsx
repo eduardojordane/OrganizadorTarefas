@@ -1,39 +1,79 @@
 import React from 'react';
+import Modal from 'react-modal';
 import './Router.scss';
 import {useState} from 'react';
 import Pencil from '../../images/pencil.svg'
 import Trash from '../../images/trash.svg'
 
+
 const Router = () => {
   const db = [
-    { "id": 1, "title": "Exercicios", "description": "Ir para academia fazer exercicios", "completed": true },
-    { "id": 2, "title": "Limpar o carro", "description": "Limpar o carro inteiro, de dentro pra fora", "completed": false },
-    { "id": 3, "title": "Banho e tosa", "description": "Levar o cachorro ao pet shop", "completed": false },
-    { "id": 4, "title": "Limpar quarto", "description": "Limpar toda bagunça que está dentro do quarto", "completed": true },
-    { "id": 5, "title": "trabalhar", "description": "Chegar ao escritorio antes das 20:00", "completed": true },
-    { "id": 6, "title": "Ir ao banco", "description": "Chear ao banco antes das 10:00", "completed": false },
-    { "id": 7, "title": "Almoçar", "description": "Preparar a comida para a janta", "completed": false },
-    { "id": 8, "title": "Jogar volei", "description": "Ir a quadra para jogar volei com os amigos", "completed": true },
-    { "id": 9, "title": "Estudar programação", "description": "Entrar na plataforma dos alunos para estudar", "completed": false },
-    { "id": 10, "title": "shopping", "description": "Fazer algumas compras no shopping", "completed": true }
+    { "id": 0, "title": "Exercicios", "description": "Ir para academia fazer exercicios", "completed": true },
+    { "id": 1, "title": "Limpar o carro", "description": "Limpar o carro inteiro, de dentro pra fora", "completed": false },
+    { "id": 2, "title": "Banho e tosa", "description": "Levar o cachorro ao pet shop", "completed": false },
+    { "id": 3, "title": "Limpar quarto", "description": "Limpar toda bagunça que está dentro do quarto", "completed": true },
+    { "id": 4, "title": "trabalhar", "description": "Chegar ao escritorio antes das 20:00", "completed": true },
+    { "id": 5, "title": "Ir ao banco", "description": "Chear ao banco antes das 10:00", "completed": false },
+    { "id": 6, "title": "Almoçar", "description": "Preparar a comida para a janta", "completed": false },
+    { "id": 7, "title": "Jogar volei", "description": "Ir a quadra para jogar volei com os amigos", "completed": true },
+    { "id": 8, "title": "Estudar programação", "description": "Entrar na plataforma dos alunos para estudar", "completed": false },
+    { "id": 9, "title": "shopping", "description": "Fazer algumas compras no shopping", "completed": true }
   ];
 
 const [array, setArray] = useState(db);
+         
+const mudarEstado = (id) => {
+  console.log(array)
+  console.log(array[id].title)
+  console.log(array[id].completed)
+
+  setArray((array) => {
+    return array.map((task) => {
+      if (task.id === id) {
+        return { ...task, completed: !task.completed };
+      }
+      console.log(array[id].title)
+      console.log(array[id].completed)
+      return task;
+    });
+  });
+
+}
+
+const [modalIsOpen, setModalIsOpen] = useState(false);
+const [selectedTask, setSelectedTask] = useState(null);
+const [editedPhrase, setEditedPhrase] = useState('');
+
+
+
+const openModal = (task) => {
+  setSelectedTask(task);
+  setEditedPhrase(task.description);
+  setModalIsOpen(true);
+};
+
+
+
+const closeModal = () => {
+  setModalIsOpen(false);
+};
+
+const updateTask = () => {
+  if (selectedTask) {
+    const updatedArray = array.map((task) => {
+      if (task.id === selectedTask.id) {
+        return { ...task, description: editedPhrase };
+      }
+      return task;
+    });
+    setArray(updatedArray);
+  }
+  closeModal();
+};
 
 const removeItem = (id) => {
-  console.log(array)
-              
-  /*const newData = [...array]
-  newData.splice((id-1), 1)
-  setArray(newData)*/
-              
   const newData = array.filter((e) => e.id !== id);
   setArray(newData);
-  console.log(newData)
-
-  /*const rootElement = document.getElementById("root");
-  ReactDOM.render(<App />, rootElement);*/
-  
 };
 
  return (
@@ -50,12 +90,6 @@ const removeItem = (id) => {
         <hr/>
         <tbody>
           {array.map((task) => {
-            
-            const [checked, setChecked] = useState(task.completed);
-            
-              function mudarEstado(){
-                setChecked (!checked);
-              }
 
             return (
               <tr key={task.id}>
@@ -67,20 +101,35 @@ const removeItem = (id) => {
                     title="statusbox"
                     id={task.id}
                     value={task.completed}
-                    checked={checked}
-                    onChange={mudarEstado}
+                    checked={task.completed}
+                    onChange={() => mudarEstado(task.id)}
                   />
                 </td>
                 <td className="StatusOpcoesAlign">
-                  <button><img src={Pencil} /></button>
+                  <button onClick={() => openModal(task)}><img src={Pencil} alt="Editar"/></button>
                   <button onClick={() => removeItem(task.id)}><img src={Trash} alt="Remover"/></button>
                  </td>
-
               </tr>
             );
           })}
         </tbody>
       </table>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        className = "Modal"
+      >
+        <p>Deseja editar esse item?</p>
+        <input
+          type="text"
+          value={editedPhrase}
+          onChange={(e) => setEditedPhrase(e.target.value)}
+        />
+        <div>
+          <button onClick={closeModal}>Não</button>
+          <button onClick={updateTask}>Sim</button>
+        </div>
+      </Modal>
     </div>
   )
 }
