@@ -42,13 +42,15 @@ const mudarEstado = (id) => {
 
 const [modalIsOpen, setModalIsOpen] = useState(false);
 const [selectedTask, setSelectedTask] = useState(null);
-const [editedPhrase, setEditedPhrase] = useState('');
+const [editedPhrase, setEditedDescription] = useState('');
+const [newTask, setNewTask] = useState({ title: '', description: '', completed: false });
+const [newTaskModalIsOpen, setNewTaskModalIsOpen] = useState(false);
 
 
 
 const openModal = (task) => {
   setSelectedTask(task);
-  setEditedPhrase(task.description);
+  setEditedDescription(task.description);
   setModalIsOpen(true);
 };
 
@@ -75,6 +77,19 @@ const removeItem = (id) => {
   const newData = array.filter((e) => e.id !== id);
   setArray(newData);
 };
+
+const openNewTaskModal = () => {
+    setNewTaskModalIsOpen(true);
+};
+
+const addNewTask = () => {
+    if (newTask.title && newTask.description) {
+      const newId = Math.max(...array.map((task) => task.id), -1) + 1;
+      setArray([...array, { ...newTask, id: newId }]);
+      setNewTask({ title: '', description: '', completed: false });
+      setNewTaskModalIsOpen(false);
+    }
+  };
 
  return (
     <div className="Tasks">
@@ -108,10 +123,19 @@ const removeItem = (id) => {
                 <td className="StatusOpcoesAlign">
                   <button onClick={() => openModal(task)}><img src={Pencil} alt="Editar"/></button>
                   <button onClick={() => removeItem(task.id)}><img src={Trash} alt="Remover"/></button>
-                 </td>
+                </td>
               </tr>
             );
           })}
+          <tr className='newTaskRow'>
+            <td>
+              <p>Nova tarefa...</p>
+            </td>
+            <td></td>
+            <td id="addButton">
+            <button onClick={openNewTaskModal} id="addButton">+</button>
+            </td>
+          </tr>
         </tbody>
       </table>
       <Modal
@@ -123,11 +147,30 @@ const removeItem = (id) => {
         <input
           type="text"
           value={editedPhrase}
-          onChange={(e) => setEditedPhrase(e.target.value)}
+          onChange={(e) => setEditedDescription(e.target.value)}
         />
         <div>
           <button onClick={closeModal}>Não</button>
           <button onClick={updateTask}>Sim</button>
+        </div>
+      </Modal>
+      <Modal isOpen={newTaskModalIsOpen} onRequestClose={() => setNewTaskModalIsOpen(false)} className="Modal">
+        <p>Adicionar nova tarefa</p>
+        <input
+          type="text"
+          placeholder="Nova Tarefa"
+          value={newTask.title}
+          onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Descrição"
+          value={newTask.description}
+          onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+        />
+        <div>
+          <button onClick={() => setNewTaskModalIsOpen(false)}>Cancelar</button>
+          <button onClick={addNewTask}>Adicionar</button>
         </div>
       </Modal>
     </div>
