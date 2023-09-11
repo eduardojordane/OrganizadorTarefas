@@ -7,5 +7,5 @@ export default defineConfig({
   plugins: [react()],
 
   
-  base:'/https://github.com/eduardojordane/OrganizadorTarefas/',
+  base:'./',
 })
